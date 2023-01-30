@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1024580958478",
+    "project_id": "fornote-a2210",
+    "storage_bucket": "fornote-a2210.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1024580958478:android:7b3ae8aeee1d184c0eff5f",
+        "android_client_info": {
+          "package_name": "com.makingstuffup.fornote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1024580958478-e4srsfav6nmrgk7h59ufgv62u01r174c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAR1sQwSfWPLWRRR6hTUB6xqwy2Golo_ys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1024580958478-e4srsfav6nmrgk7h59ufgv62u01r174c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
