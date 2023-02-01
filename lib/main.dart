@@ -3,29 +3,35 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fornote/firebase_options.dart';
 import 'package:fornote/screens/login_screen.dart';
-import 'package:fornote/widgets/text_field_widget.dart';
+import 'package:fornote/screens/register_screen.dart';
+import 'package:fornote/screens/verify_email_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
+      theme: ThemeData(),
       home: const LoginScreen(),
+      // initialRoute: '/login_screen',
+      debugShowCheckedModeBanner: false,
+      routes: {
+        '/login_screen': (context) => const LoginScreen(),
+        '/register_screen': (context) => const RegisterScreen(),
+        '/verify_email_screen': (context) => const VerifyEmailScreen(),
+      },
     ),
   );
 }
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _HomePageState extends State<HomePage> {
   late final TextEditingController _email;
   late final TextEditingController _password;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -46,146 +52,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/login_background.png'),
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Form(
-                      // key: formKey,
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 112,
-                          ),
-                          const Image(
-                            image: AssetImage('images/logo.png'),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          const Text(
-                            "Let's Get Started",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 14,
-                          ),
-                          const Text(
-                            'create a new account',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 14,
-                          ),
-                          textFormField(
-                            keyboardT: TextInputType.emailAddress,
-                            obscureText: false,
-                            autocorrect: true,
-                            suggestions: true,
-                            hintText: 'Enter your Email here',
-                            textFieldIcon: const Icon(Icons.email),
-                            controller: _email,
-                            validator: (value) {
-                              if (value.isEmpty || value == null) {
-                                return 'Please, Enter your Email';
-                              } else if (value.isNotEmpty && value.length < 4) {
-                                return 'Please, your email is so short';
-                              } else if (!value.contains("@") ||
-                                  !value.contains(".")) {
-                                return 'Please, Enter a vaild email ';
-                              } else {
-                                return null;
-                              }
-                            },
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          textFormField(
-                            keyboardT: TextInputType.text,
-                            obscureText: false,
-                            autocorrect: false,
-                            suggestions: false,
-                            hintText: 'Enter your Email here',
-                            textFieldIcon: const Icon(Icons.email),
-                            controller: _password,
-                            validator: (value) {
-                              if (value.isEmpty || value == null) {
-                                return 'Please, Enter your Email';
-                              } else if (value.isNotEmpty && value.length < 4) {
-                                return 'Please, your email is so short';
-                              } else if (!value.contains("@") ||
-                                  !value.contains(".")) {
-                                return 'Please, Enter a vaild email ';
-                              } else {
-                                return null;
-                              }
-                            },
-                          ),
-                          const SizedBox(
-                            height: 32,
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xff09C2B5),
-                                minimumSize: const Size(double.infinity, 46)),
-                            onPressed: () async {
-                              final email = _email.text;
-                              final password = _password.text;
-
-                              try {
-                                final UserCredential = await FirebaseAuth
-                                    .instance
-                                    .createUserWithEmailAndPassword(
-                                  email: email,
-                                  password: password,
-                                );
-                                print(UserCredential);
-                              } on FirebaseException catch (e) {
-                                if (e.code == 'unknown') {
-                                  print('The Email & Password is requred');
-                                } else if (e.code == 'weak-password') {
-                                  print('this is a weak-password');
-                                } else if (e.code == 'email-already-in-use') {
-                                  print('email already in use');
-                                } else if (e.code == 'invalid-email') {
-                                  print('invalid email');
-                                } else {
-                                  print(e.code);
-                                }
-                              }
-                            },
-                            child: const Text('Register'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            default:
-              return Text('loading');
-          }
-        },
+    return FutureBuilder(
+      future: Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
       ),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              print(user);
+              if (user.emailVerified) {
+                print('your Email is verified');
+              } else {
+                const VerifyEmailScreen();
+              }
+            } else {
+              const LoginScreen();
+            }
+            return const Placeholder(
+              child: Text('Done'),
+            );
+
+          default:
+            return const Text('loading');
+        }
+      },
     );
   }
 }

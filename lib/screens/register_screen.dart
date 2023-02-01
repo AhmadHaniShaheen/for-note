@@ -2,17 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fornote/firebase_options.dart';
-import 'package:fornote/main.dart';
 import 'package:fornote/widgets/text_field_widget.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   late final TextEditingController _email;
   late final TextEditingController _password;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -135,46 +134,37 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () async {
                           final email = _email.text;
                           final password = _password.text;
+
                           try {
                             final userCredential = await FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
+                                .createUserWithEmailAndPassword(
                               email: email,
                               password: password,
                             );
-
-                            Future.delayed(Duration.zero, () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const HomePage(),
-                                ),
-                              );
-                            });
-
-                            print('user Credential is: $userCredential');
+                            print(userCredential);
                           } on FirebaseException catch (e) {
                             if (e.code == 'unknown') {
                               print('The Email & Password is requred');
+                            } else if (e.code == 'weak-password') {
+                              print('this is a weak-password');
+                            } else if (e.code == 'email-already-in-use') {
+                              print('email already in use');
                             } else if (e.code == 'invalid-email') {
                               print('invalid email');
-                            } else if (e.code == 'wrong-password') {
-                              print('Wrong password');
-                            } else if (e.code == 'user-not-found') {
-                              print('user not found');
                             } else {
-                              print(e.code);
+                              print('Error is ${e.code}');
                             }
                           }
                         },
-                        child: const Text('Login'),
+                        child: const Text('Register'),
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context)
-                              .pushReplacementNamed('/register_screen');
+                          Navigator.pushReplacementNamed(
+                              context, '/login_screen');
                         },
                         child: const Text(
-                          'Don\'t have an acount, Register Now',
+                          'already have an acount, Login Now',
                           style: TextStyle(
                             color: Color.fromARGB(255, 55, 46, 46),
                           ),
