@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fornote/constant/route.dart';
 import 'package:fornote/firebase_options.dart';
 import 'package:fornote/widgets/text_field_widget.dart';
+import 'dart:developer' as devtool show log;
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -141,18 +143,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               email: email,
                               password: password,
                             );
-                            print(userCredential);
+                            devtool.log(userCredential.toString());
                           } on FirebaseException catch (e) {
                             if (e.code == 'unknown') {
-                              print('The Email & Password is requred');
+                              devtool.log('The Email & Password is requred');
                             } else if (e.code == 'weak-password') {
-                              print('this is a weak-password');
+                              devtool.log('this is a weak-password');
                             } else if (e.code == 'email-already-in-use') {
-                              print('email already in use');
+                              devtool.log('email already in use');
                             } else if (e.code == 'invalid-email') {
-                              print('invalid email');
+                              devtool.log('invalid email');
                             } else {
-                              print('Error is ${e.code}');
+                              devtool.log('Error is ${e.code}');
                             }
                           }
                         },
@@ -160,8 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacementNamed(
-                              context, '/login_screen');
+                          Navigator.pushReplacementNamed(context, loginRoute);
                         },
                         child: const Text(
                           'already have an acount, Login Now',

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fornote/constant/route.dart';
 import 'package:fornote/firebase_options.dart';
 import 'package:fornote/screens/login_screen.dart';
 import 'package:fornote/screens/register_screen.dart';
@@ -17,9 +18,10 @@ void main() {
       // initialRoute: '/login_screen',
       debugShowCheckedModeBanner: false,
       routes: {
-        '/login_screen': (context) => const LoginScreen(),
-        '/register_screen': (context) => const RegisterScreen(),
-        '/verify_email_screen': (context) => const VerifyEmailScreen(),
+        loginRoute: (context) => const LoginScreen(),
+        registerRoute: (context) => const RegisterScreen(),
+        verifyEmailRoute: (context) => const VerifyEmailScreen(),
+        noteRoute: (context) => const NoteScreen(),
       },
     ),
   );
@@ -62,7 +64,6 @@ class _HomePageState extends State<HomePage> {
           case ConnectionState.done:
             final user = FirebaseAuth.instance.currentUser;
             if (user != null) {
-              devtool.log(user.toString());
               if (user.emailVerified) {
                 return const NoteScreen();
               } else {
@@ -101,8 +102,8 @@ class _NoteScreenState extends State<NoteScreen> {
             itemBuilder: (context) {
               return [
                 const PopupMenuItem<MenuAction>(
-                  child: const Text('Log out'),
                   value: MenuAction.logOut,
+                  child: Text('Log out'),
                 ),
               ];
             },

@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fornote/constant/route.dart';
 import 'package:fornote/firebase_options.dart';
 import 'package:fornote/main.dart';
 import 'package:fornote/widgets/text_field_widget.dart';
+import 'dart:developer' as devtool show log;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -136,34 +138,30 @@ class _LoginScreenState extends State<LoginScreen> {
                           final email = _email.text;
                           final password = _password.text;
                           try {
-                            final userCredential = await FirebaseAuth.instance
+                            await FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
                               email: email,
                               password: password,
                             );
-
                             Future.delayed(Duration.zero, () {
-                              
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const HomePage(),
                                 ),
                               );
                             });
-
-                            print('user Credential is: $userCredential');
                           } on FirebaseException catch (e) {
                             if (e.code == 'unknown') {
-                              print('The Email & Password is requred');
+                              devtool.log('The Email & Password is requred');
                             } else if (e.code == 'invalid-email') {
-                              print('invalid email');
+                              devtool.log('invalid email');
                             } else if (e.code == 'wrong-password') {
-                              print('Wrong password');
+                              devtool.log('Wrong password');
                             } else if (e.code == 'user-not-found') {
-                              print('user not found');
+                              devtool.log('user not found');
                             } else {
-                              print(e.code);
+                              devtool.log(e.code);
                             }
                           }
                         },
@@ -172,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextButton(
                         onPressed: () {
                           Navigator.of(context)
-                              .pushReplacementNamed('/register_screen');
+                              .pushReplacementNamed(registerRoute);
                         },
                         child: const Text(
                           'Don\'t have an acount, Register Now',
