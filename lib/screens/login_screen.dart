@@ -143,6 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             );
 
                             Future.delayed(Duration.zero, () {
+                              
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

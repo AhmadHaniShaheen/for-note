@@ -5,6 +5,7 @@ import 'package:fornote/firebase_options.dart';
 import 'package:fornote/screens/login_screen.dart';
 import 'package:fornote/screens/register_screen.dart';
 import 'package:fornote/screens/verify_email_screen.dart';
+import 'dart:developer' as devtool show log;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +13,7 @@ void main() {
     MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: const LoginScreen(),
+      home: const HomePage(),
       // initialRoute: '/login_screen',
       debugShowCheckedModeBanner: false,
       routes: {
@@ -61,23 +62,99 @@ class _HomePageState extends State<HomePage> {
           case ConnectionState.done:
             final user = FirebaseAuth.instance.currentUser;
             if (user != null) {
-              print(user);
+              devtool.log(user.toString());
               if (user.emailVerified) {
-                print('your Email is verified');
+                return const NoteScreen();
               } else {
-                const VerifyEmailScreen();
+                return const VerifyEmailScreen();
               }
             } else {
-              const LoginScreen();
+              return const LoginScreen();
             }
-            return const Placeholder(
-              child: Text('Done'),
-            );
-
           default:
             return const Text('loading');
         }
       },
     );
   }
+}
+
+enum MenuAction {
+  logOut,
+}
+
+class NoteScreen extends StatefulWidget {
+  const NoteScreen({super.key});
+
+  @override
+  State<NoteScreen> createState() => _NoteScreenState();
+}
+
+class _NoteScreenState extends State<NoteScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Main UI'),
+        actions: [
+          PopupMenuButton<MenuAction>(
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem<MenuAction>(
+                  child: const Text('Log out'),
+                  value: MenuAction.logOut,
+                ),
+              ];
+            },
+            onSelected: (value) async {
+              switch (value) {
+                case MenuAction.logOut:
+                  final shouldLogout = await logOutDilog(context);
+                  if (shouldLogout) {
+                    FirebaseAuth.instance.signOut();
+                    Future.delayed(
+                      const Duration(seconds: 0),
+                      () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/login_screen', (_) => false);
+                      },
+                    );
+                  }
+                  break;
+              }
+            },
+          )
+        ],
+      ),
+      body: const Text('Hello word'),
+    );
+  }
+}
+
+Future<bool> logOutDilog(BuildContext context) {
+  return showDialog<bool>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Log Out'),
+        content: const Text('Are you sure you wont to log out? '),
+        actions: [
+          TextButton(
+            onPressed: () {
+              devtool.log('false');
+              Navigator.of(context).pop(false);
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              devtool.log('true');
+              Navigator.of(context).pop(true);
+            },
+            child: const Text('Sure'),
+          ),
+        ],
+      );
+    },
+  ).then((value) => value ?? false);
 }
