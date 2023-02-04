@@ -15,7 +15,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       appBar: AppBar(title: const Text('Verify your email')),
       body: Column(
         children: [
-          const Text('Plese verify your Email'),
+          const Text(
+              "we've sent to you email to verify your email, cleck to Veriry"),
+          const Text("if you doe's reseve an email, click to this button"),
           ElevatedButton(
             onPressed: () {
               final user = FirebaseAuth.instance.currentUser;

@@ -3,8 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fornote/constant/route.dart';
 import 'package:fornote/firebase_options.dart';
+import 'package:fornote/utilities/show_snackbar_error.dart';
 import 'package:fornote/widgets/text_field_widget.dart';
-import 'dart:developer' as devtool show log;
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -138,24 +138,54 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           final password = _password.text;
 
                           try {
-                            final userCredential = await FirebaseAuth.instance
+                            await FirebaseAuth.instance
                                 .createUserWithEmailAndPassword(
                               email: email,
                               password: password,
                             );
-                            devtool.log(userCredential.toString());
+                            final user = FirebaseAuth.instance.currentUser;
+                            user?.sendEmailVerification();
+                            Future.delayed(const Duration(seconds: 0), () {
+                              Navigator.pushNamed(context, verifyEmailRoute);
+                            });
                           } on FirebaseException catch (e) {
                             if (e.code == 'unknown') {
-                              devtool.log('The Email & Password is requred');
+                              showErrorSnackbar(
+                                context,
+                                message: 'The Email & Password is requred',
+                                error: true,
+                              );
                             } else if (e.code == 'weak-password') {
-                              devtool.log('this is a weak-password');
+                              showErrorSnackbar(
+                                context,
+                                message: 'this is a weak-password',
+                                error: true,
+                              );
                             } else if (e.code == 'email-already-in-use') {
-                              devtool.log('email already in use');
+                              showErrorSnackbar(
+                                context,
+                                message: 'email already in use',
+                                error: true,
+                              );
                             } else if (e.code == 'invalid-email') {
-                              devtool.log('invalid email');
+                              showErrorSnackbar(
+                                context,
+                                message: 'invalid email',
+                                error: true,
+                              );
                             } else {
-                              devtool.log('Error is ${e.code}');
+                              showErrorSnackbar(
+                                context,
+                                message: 'Error is ${e.code}',
+                                error: true,
+                              );
                             }
+                          } catch (e) {
+                            showErrorSnackbar(
+                              context,
+                              message: e.toString(),
+                              error: true,
+                            );
                           }
                         },
                         child: const Text('Register'),

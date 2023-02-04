@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fornote/constant/route.dart';
 import 'package:fornote/firebase_options.dart';
 import 'package:fornote/main.dart';
+import 'package:fornote/utilities/show_snackbar_error.dart';
 import 'package:fornote/widgets/text_field_widget.dart';
 import 'dart:developer' as devtool show log;
 
@@ -143,26 +144,71 @@ class _LoginScreenState extends State<LoginScreen> {
                               email: email,
                               password: password,
                             );
-                            Future.delayed(Duration.zero, () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const HomePage(),
-                                ),
+                            final user = FirebaseAuth.instance.currentUser;
+                            if (user?.emailVerified ?? false) {
+                              Future.delayed(
+                                Duration.zero,
+                                () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HomePage(),
+                                    ),
+                                  );
+                                },
                               );
-                            });
+                            } else {
+                              Future.delayed(
+                                Duration.zero,
+                                () {
+                                  showErrorSnackbar(context,
+                                      message: 'Verify your Email',
+                                      error: true);
+
+                                  Navigator.pushNamed(
+                                      context, verifyEmailRoute);
+                                },
+                              );
+                            }
                           } on FirebaseException catch (e) {
                             if (e.code == 'unknown') {
-                              devtool.log('The Email & Password is requred');
+                              showErrorSnackbar(
+                                context,
+                                message: 'The Email & Password is requred',
+                                error: true,
+                              );
                             } else if (e.code == 'invalid-email') {
-                              devtool.log('invalid email');
+                              showErrorSnackbar(
+                                context,
+                                message: 'invalid email',
+                                error: true,
+                              );
                             } else if (e.code == 'wrong-password') {
+                              showErrorSnackbar(
+                                context,
+                                message: 'wrong password',
+                                error: true,
+                              );
                               devtool.log('Wrong password');
                             } else if (e.code == 'user-not-found') {
-                              devtool.log('user not found');
+                              showErrorSnackbar(
+                                context,
+                                message: 'user not found',
+                                error: true,
+                              );
                             } else {
-                              devtool.log(e.code);
+                              showErrorSnackbar(
+                                context,
+                                message: 'error is ${e.code}',
+                                error: true,
+                              );
                             }
+                          } catch (e) {
+                            showErrorSnackbar(
+                              context,
+                              message: e.toString(),
+                              error: true,
+                            );
                           }
                         },
                         child: const Text('Login'),
