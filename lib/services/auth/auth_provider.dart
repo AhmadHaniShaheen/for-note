@@ -1,6 +1,7 @@
-import 'package:fornote/servise/auth/auth_user.dart';
+import 'package:fornote/services/auth/auth_user.dart';
 
 abstract class AuthProvider {
+  Future<void> firebaseInitializ();
   AuthUser? get currentUser;
 
   Future<AuthUser> logIn({

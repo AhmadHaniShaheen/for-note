@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fornote/services/auth/firebase_auth_services.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
   const VerifyEmailScreen({super.key});
@@ -20,8 +20,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
           const Text("if you doe's reseve an email, click to this button"),
           ElevatedButton(
             onPressed: () {
-              final user = FirebaseAuth.instance.currentUser;
-              user?.sendEmailVerification();
+              AuthService.firebase().verifyEmail();
             },
             child: const Text('Verify Email'),
           ),

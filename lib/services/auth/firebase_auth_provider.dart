@@ -1,11 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fornote/servise/auth/auth_exceptions.dart';
-import 'package:fornote/servise/auth/auth_user.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:fornote/firebase_options.dart';
+import 'package:fornote/services/auth/auth_exceptions.dart';
+import 'package:fornote/services/auth/auth_provider.dart';
+import 'package:fornote/services/auth/auth_user.dart';
 
-class FirebaseAuthProvider implements AuthUser {
+class FirebaseAuthProvider implements AuthProvider {
   @override
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
+    // ignore: unnecessary_null_comparison
     if (User != null) {
       return AuthUser.formFirebase(user!);
     } else {
@@ -98,5 +102,9 @@ class FirebaseAuthProvider implements AuthUser {
   }
 
   @override
-  bool get isEmailVerify => throw UnimplementedError();
+  Future<void> firebaseInitializ() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 }

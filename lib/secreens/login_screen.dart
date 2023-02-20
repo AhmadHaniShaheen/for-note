@@ -1,12 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fornote/constant/route.dart';
-import 'package:fornote/firebase_options.dart';
 import 'package:fornote/main.dart';
+import 'package:fornote/services/auth/auth_exceptions.dart';
+import 'package:fornote/services/auth/firebase_auth_services.dart';
 import 'package:fornote/utilities/show_snackbar_error.dart';
 import 'package:fornote/widgets/text_field_widget.dart';
-import 'dart:developer' as devtool show log;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,9 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      ),
+      future: AuthService.firebase().firebaseInitializ(),
       builder: (context, snapshot) {
         return Scaffold(
           body: Container(
@@ -139,13 +135,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           final email = _email.text;
                           final password = _password.text;
                           try {
-                            await FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                              email: email,
-                              password: password,
-                            );
-                            final user = FirebaseAuth.instance.currentUser;
-                            if (user?.emailVerified ?? false) {
+                            await AuthService.firebase()
+                                .logIn(email: email, password: password);
+                            final user = AuthService.firebase().currentUser;
+                            if (user?.isEmailVerify ?? false) {
                               Future.delayed(
                                 Duration.zero,
                                 () {
@@ -170,43 +163,34 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                               );
                             }
-                          } on FirebaseException catch (e) {
-                            if (e.code == 'unknown') {
-                              showErrorSnackbar(
-                                context,
-                                message: 'The Email & Password is requred',
-                                error: true,
-                              );
-                            } else if (e.code == 'invalid-email') {
-                              showErrorSnackbar(
-                                context,
-                                message: 'invalid email',
-                                error: true,
-                              );
-                            } else if (e.code == 'wrong-password') {
-                              showErrorSnackbar(
-                                context,
-                                message: 'wrong password',
-                                error: true,
-                              );
-                              devtool.log('Wrong password');
-                            } else if (e.code == 'user-not-found') {
-                              showErrorSnackbar(
-                                context,
-                                message: 'user not found',
-                                error: true,
-                              );
-                            } else {
-                              showErrorSnackbar(
-                                context,
-                                message: 'error is ${e.code}',
-                                error: true,
-                              );
-                            }
-                          } catch (e) {
+                          } on EmailAndPasswordRequriedAuthException {
                             showErrorSnackbar(
                               context,
-                              message: e.toString(),
+                              message: 'The Email & Password is requred',
+                              error: true,
+                            );
+                          } on InvalidEmailAuthException {
+                            showErrorSnackbar(
+                              context,
+                              message: 'invalid email',
+                              error: true,
+                            );
+                          } on WrongPasswordAuthException {
+                            showErrorSnackbar(
+                              context,
+                              message: 'wrong password',
+                              error: true,
+                            );
+                          } on UserNotFoundAuthException {
+                            showErrorSnackbar(
+                              context,
+                              message: 'user not found',
+                              error: true,
+                            );
+                          } on GeneralAuthException {
+                            showErrorSnackbar(
+                              context,
+                              message: 'Authntecation Error',
                               error: true,
                             );
                           }
