@@ -92,7 +92,11 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
+<<<<<<< HEAD
   Future<void> sendEmailVerification() async {
+=======
+  Future<void> verifyEmail() async {
+>>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       await user.sendEmailVerification();
@@ -102,7 +106,11 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
+<<<<<<< HEAD
   Future<void> initialize() async {
+=======
+  Future<void> firebaseInitializ() async {
+>>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );

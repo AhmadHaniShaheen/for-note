@@ -18,7 +18,11 @@ void main() {
     });
 
     test('Should be able to be initialized', () async {
+<<<<<<< HEAD
       await provider.initialize();
+=======
+      await provider.firebaseInitializ();
+>>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b
       expect(provider.isInitialized, true);
     });
 
@@ -29,7 +33,11 @@ void main() {
     test(
       'Should be able to initialize in less than 2 seconds',
       () async {
+<<<<<<< HEAD
         await provider.initialize();
+=======
+        await provider.firebaseInitializ();
+>>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b
         expect(provider.isInitialized, true);
       },
       timeout: const Timeout(Duration(seconds: 2)),
@@ -60,7 +68,11 @@ void main() {
     });
 
     test('Logged in user should be able to get verified', () {
+<<<<<<< HEAD
       provider.sendEmailVerification();
+=======
+      provider.verifyEmail();
+>>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b
       final user = provider.currentUser;
       expect(user, isNotNull);
       expect(user!.isEmailVerify, true);
@@ -144,7 +156,11 @@ class MockAuthProvider implements AuthProvider {
     if (!isInitialized) throw NotInitalizeExceptin();
     if (email == 'foo@bar.com') throw UserNotFoundAuthException();
     if (password == 'foobar') throw WrongPasswordAuthException();
+<<<<<<< HEAD
     const user = AuthUser(isEmailVerify: false, email: 'ahmad@bar.com');
+=======
+    const user = AuthUser(isEmailVerify: false);
+>>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b
     _user = user;
     return Future.value(user);
   }
@@ -158,7 +174,11 @@ class MockAuthProvider implements AuthProvider {
   }
 
   @override
+<<<<<<< HEAD
   Future<void> initialize() async {
+=======
+  Future<void> firebaseInitializ() async {
+>>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b
     await Future.delayed(const Duration(seconds: 1));
     _isInitialized = true;
   }
@@ -175,11 +195,19 @@ class MockAuthProvider implements AuthProvider {
   }
 
   @override
+<<<<<<< HEAD
   Future<void> sendEmailVerification() async {
     if (!isInitialized) throw NotInitalizeExceptin();
     final user = _user;
     if (user == null) throw UserNotFoundAuthException();
     const newUser = AuthUser(isEmailVerify: true, email: 'foo@bar.com');
+=======
+  Future<void> verifyEmail() async {
+    if (!isInitialized) throw NotInitalizeExceptin();
+    final user = _user;
+    if (user == null) throw UserNotFoundAuthException();
+    const newUser = AuthUser(isEmailVerify: true);
+>>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b
     _user = newUser;
   }
 }
