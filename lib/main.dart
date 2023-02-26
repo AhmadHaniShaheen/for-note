@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -10,15 +9,6 @@ import 'package:fornote/views/notes/notes_view.dart';
 import 'package:fornote/views/register_view.dart';
 import 'package:fornote/views/verify_email_view.dart';
 import 'dart:developer' as devtool show log;
-=======
-import 'package:flutter/material.dart';
-import 'package:fornote/constant/route.dart';
-import 'package:fornote/secreens/login_screen.dart';
-import 'package:fornote/secreens/notes_screen.dart';
-import 'package:fornote/secreens/register_screen.dart';
-import 'package:fornote/secreens/verify_email_screen.dart';
-import 'package:fornote/services/auth/firebase_auth_services.dart';
->>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,18 +20,11 @@ void main() {
       // initialRoute: '/login_screen',
       debugShowCheckedModeBanner: false,
       routes: {
-<<<<<<< HEAD
         loginRoute: (context) => const LoginView(),
         registerRoute: (context) => const RegisterView(),
         verifyEmailRoute: (context) => const VerifyEmailView(),
         noteRoute: (context) => const NoteView(),
         newNoteRoute: (context) => const NewNoteVIew(),
-=======
-        loginRoute: (context) => const LoginScreen(),
-        registerRoute: (context) => const RegisterScreen(),
-        verifyEmailRoute: (context) => const VerifyEmailScreen(),
-        noteRoute: (context) => const NoteScreen(),
->>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b
       },
     ),
   );
@@ -76,7 +59,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-<<<<<<< HEAD
       future: Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ),
@@ -95,30 +77,11 @@ class _HomePageState extends State<HomePage> {
             }
           default:
             return const CircularProgressIndicator();
-=======
-      future: AuthService.firebase().firebaseInitializ(),
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.done:
-            final user = AuthService.firebase().currentUser;
-            if (user != null) {
-              if (user.isEmailVerify) {
-                return const NoteScreen();
-              } else {
-                return const VerifyEmailScreen();
-              }
-            } else {
-              return const LoginScreen();
-            }
-          default:
-            return const Text('loading');
->>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b
         }
       },
     );
   }
 }
-<<<<<<< HEAD
 
 enum MenuAction {
   logOut,
@@ -151,5 +114,3 @@ Future<bool> logOutDilog(BuildContext context) {
     },
   ).then((value) => value ?? false);
 }
-=======
->>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b

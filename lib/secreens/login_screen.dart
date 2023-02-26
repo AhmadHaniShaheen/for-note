@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: AuthService.firebase().firebaseInitializ(),
+      future: AuthService.firebase().initialize(),
       builder: (context, snapshot) {
         return Scaffold(
           body: Container(

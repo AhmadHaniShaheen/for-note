@@ -58,7 +58,7 @@ class _NoteViewState extends State<NoteView> {
                       const Duration(seconds: 0),
                       () {
                         Navigator.pushNamedAndRemoveUntil(
-                            context, '/login_screen', (_) => false);
+                            context, loginRoute, (_) => false);
                       },
                     );
                   }

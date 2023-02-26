@@ -63,12 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1024580958478',
     projectId: 'fornote-a2210',
     storageBucket: 'fornote-a2210.appspot.com',
-<<<<<<< HEAD
     iosClientId:
         '1024580958478-hsrmp7gdv0020m3oaa65ds1dmaa1brlt.apps.googleusercontent.com',
-=======
-    iosClientId: '1024580958478-hsrmp7gdv0020m3oaa65ds1dmaa1brlt.apps.googleusercontent.com',
->>>>>>> a472854abdda48c4c89ccf97e4efde7dd1230f1b
     iosBundleId: 'com.makingstuffup.fornote',
   );
 }

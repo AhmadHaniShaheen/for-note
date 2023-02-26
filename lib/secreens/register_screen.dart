@@ -34,7 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: AuthService.firebase().firebaseInitializ(),
+      future: AuthService.firebase().initialize(),
       builder: (context, snapshot) {
         return Scaffold(
           body: Container(
@@ -137,7 +137,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           try {
                             await AuthService.firebase()
                                 .register(email: email, password: password);
-                            AuthService.firebase().verifyEmail();
+                            AuthService.firebase().sendEmailVerification();
                             Future.delayed(const Duration(seconds: 0), () {
                               Navigator.pushNamed(context, verifyEmailRoute);
                             });

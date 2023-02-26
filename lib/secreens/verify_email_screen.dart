@@ -20,7 +20,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
           const Text("if you doe's reseve an email, click to this button"),
           ElevatedButton(
             onPressed: () {
-              AuthService.firebase().verifyEmail();
+              AuthService.firebase().sendEmailVerification();
             },
             child: const Text('Verify Email'),
           ),
