@@ -1,17 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fornote/constant/route.dart';
 import 'package:fornote/enum/menu_item.dart';
 import 'package:fornote/services/auth/firebase_auth_services.dart';
 import 'package:fornote/services/crud/notes_services.dart';
 
-class NoteScreen extends StatefulWidget {
-  const NoteScreen({super.key});
+class NoteView extends StatefulWidget {
+  const NoteView({super.key});
 
   @override
-  State<NoteScreen> createState() => _NoteScreenState();
+  State<NoteView> createState() => _NoteViewState();
 }
 
-class _NoteScreenState extends State<NoteScreen> {
+class _NoteViewState extends State<NoteView> {
   String get userEmail => AuthService.firebase().currentUser!.email!;
   late final NotesServices _notesServices;
 
@@ -31,8 +32,13 @@ class _NoteScreenState extends State<NoteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Main UI'),
+        title: const Text('Your Notes'),
         actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, newNoteRoute);
+              },
+              icon: const Icon(Icons.add)),
           PopupMenuButton<MenuAction>(
             itemBuilder: (context) {
               return [
@@ -71,8 +77,6 @@ class _NoteScreenState extends State<NoteScreen> {
                 stream: _notesServices.allNote,
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
-                    case ConnectionState.done:
-                      return const Text('wating to see notes');
                     case ConnectionState.waiting:
                       return const Text('wating to see notes');
                     default:

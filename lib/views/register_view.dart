@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:fornote/constant/route.dart';
-import 'package:fornote/main.dart';
 import 'package:fornote/services/auth/auth_exceptions.dart';
 import 'package:fornote/services/auth/firebase_auth_services.dart';
 import 'package:fornote/utilities/show_snackbar_error.dart';
 import 'package:fornote/widgets/text_field_widget.dart';
+// import 'dart:developer' as devtool show log;
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -134,39 +134,30 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () async {
                           final email = _email.text;
                           final password = _password.text;
+
                           try {
                             await AuthService.firebase()
-                                .logIn(email: email, password: password);
-                            final user = AuthService.firebase().currentUser;
-                            if (user?.isEmailVerify ?? false) {
-                              Future.delayed(
-                                Duration.zero,
-                                () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const HomePage(),
-                                    ),
-                                  );
-                                },
-                              );
-                            } else {
-                              Future.delayed(
-                                Duration.zero,
-                                () {
-                                  showErrorSnackbar(context,
-                                      message: 'Verify your Email',
-                                      error: true);
-
-                                  Navigator.pushNamed(
-                                      context, verifyEmailRoute);
-                                },
-                              );
-                            }
+                                .register(email: email, password: password);
+                            AuthService.firebase().sendEmailVerification();
+                            Future.delayed(const Duration(seconds: 0), () {
+                              Navigator.pushNamed(context, verifyEmailRoute);
+                            });
                           } on EmailAndPasswordRequriedAuthException {
                             showErrorSnackbar(
                               context,
                               message: 'The Email & Password is requred',
+                              error: true,
+                            );
+                          } on WeekPasswordAuthException {
+                            showErrorSnackbar(
+                              context,
+                              message: 'this is a weak-password',
+                              error: true,
+                            );
+                          } on EmailAlreadyInUseAuthException {
+                            showErrorSnackbar(
+                              context,
+                              message: 'email already in use',
                               error: true,
                             );
                           } on InvalidEmailAuthException {
@@ -175,35 +166,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               message: 'invalid email',
                               error: true,
                             );
-                          } on WrongPasswordAuthException {
-                            showErrorSnackbar(
-                              context,
-                              message: 'wrong password',
-                              error: true,
-                            );
-                          } on UserNotFoundAuthException {
-                            showErrorSnackbar(
-                              context,
-                              message: 'user not found',
-                              error: true,
-                            );
                           } on GeneralAuthException {
                             showErrorSnackbar(
                               context,
-                              message: 'Authntecation Error',
+                              message: 'Authentcation Error',
                               error: true,
                             );
                           }
                         },
-                        child: const Text('Login'),
+                        child: const Text('Register'),
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context)
-                              .pushReplacementNamed(registerRoute);
+                          Navigator.pushReplacementNamed(context, loginRoute);
                         },
                         child: const Text(
-                          'Don\'t have an acount, Register Now',
+                          'already have an acount, Login Now',
                           style: TextStyle(
                             color: Color.fromARGB(255, 55, 46, 46),
                           ),
