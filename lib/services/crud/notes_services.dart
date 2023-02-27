@@ -173,17 +173,16 @@ class NotesServices {
     }
   }
 
+  Future<Iterable<DatabaseNote>> getAllNote() async {
+    await _ensureDbIsOpen();
+    final db = _getDatabaseOrThrow();
+    final notes = await db.query(noteTable);
+    return notes.map((noteRow) => DatabaseNote.fromRow(noteRow));
+  }
 
-Future<Iterable<DatabaseNote>> getAllNote() async {
-  await _ensureDbIsOpen();
-  final db = _getDatabaseOrThrow();
-  final notes = await db.query(noteTable);
-  return notes.map((noteRow) => DatabaseNote.fromRow(noteRow));
-}
-
-Future<DatabaseNote> updatedNote(
-    {required String text, required DatabaseNote note}) async {
-  await _ensureDbIsOpen();
+  Future<DatabaseNote> updatedNote(
+      {required String text, required DatabaseNote note}) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final updateCount = await db.update(noteTable, {
       textColumn: text,
@@ -199,7 +198,6 @@ Future<DatabaseNote> updatedNote(
     }
   }
 }
-
 
 @immutable
 class DatabaseUser {

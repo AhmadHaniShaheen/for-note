@@ -80,11 +80,12 @@ class _NewNoteVIewState extends State<NewNoteVIew> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              _note = snapshot.data as DatabaseNote;
+              _note = snapshot.data;
               _setupTextControllerListener();
               return TextField(
                 controller: _textController,
                 keyboardType: TextInputType.multiline,
+                maxLines: null,
                 decoration:
                     const InputDecoration(hintText: 'start typing your note'),
               );
