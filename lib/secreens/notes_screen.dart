@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fornote/enum/menu_item.dart';
-import 'package:fornote/services/auth/firebase_auth_services.dart';
+import 'package:fornote/services/auth/auth_service.dart';
 
 class NoteScreen extends StatefulWidget {
   const NoteScreen({super.key});

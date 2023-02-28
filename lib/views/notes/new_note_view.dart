@@ -1,25 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:fornote/services/auth/firebase_auth_services.dart';
+import 'package:fornote/services/auth/auth_service.dart';
+import 'package:fornote/services/crud/notes_service.dart';
+import 'dart:developer' as devtool show log;
 
-import '../../services/crud/notes_services.dart';
-
-class NewNoteVIew extends StatefulWidget {
-  const NewNoteVIew({super.key});
+class NewNoteView extends StatefulWidget {
+  const NewNoteView({super.key});
 
   @override
-  State<NewNoteVIew> createState() => _NewNoteVIewState();
+  State<NewNoteView> createState() => _NewNoteViewState();
 }
 
-class _NewNoteVIewState extends State<NewNoteVIew> {
+class _NewNoteViewState extends State<NewNoteView> {
   DatabaseNote? _note;
-  late final NotesServices _notesServices;
+  late final NotesService _notesServices;
   late final TextEditingController _textController;
 
   @override
   void initState() {
+    _notesServices = NotesService();
     _textController = TextEditingController();
-    _notesServices = NotesServices();
     super.initState();
+  }
+
+  void _textControllerListener() async {
+    final note = _note;
+    if (note == null) {
+      return;
+    }
+    final text = _textController.text;
+    await _notesServices.updateNote(text: text, note: note);
+  }
+
+  void _setupTextControllerListener() {
+    _textController.removeListener(_textControllerListener);
+    _textController.addListener(_textControllerListener);
   }
 
   Future<DatabaseNote> createNote() async {
@@ -27,7 +41,8 @@ class _NewNoteVIewState extends State<NewNoteVIew> {
     if (exisitingNote != null) {
       return exisitingNote;
     }
-    final email = AuthService.firebase().currentUser!.email!;
+    final currentUser = AuthService.firebase().currentUser!;
+    final email = currentUser.email!;
     final owner = await _notesServices.getUser(email: email);
     return await _notesServices.createNote(owner: owner);
   }
@@ -39,25 +54,11 @@ class _NewNoteVIewState extends State<NewNoteVIew> {
     }
   }
 
-  void _textControllerListener() async {
-    final note = _note;
-    if (note == null) {
-      return;
-    }
-    final text = _textController.text;
-    await _notesServices.updatedNote(text: text, note: note);
-  }
-
-  void _setupTextControllerListener() {
-    _textController.removeListener(_textControllerListener);
-    _textController.addListener(_textControllerListener);
-  }
-
   void _saveNoteIfTextNotEmpty() async {
     final note = _note;
     final text = _textController.text;
     if (note != null && text.isNotEmpty) {
-      _notesServices.updatedNote(text: text, note: note);
+      _notesServices.updateNote(text: text, note: note);
     }
   }
 
@@ -80,7 +81,8 @@ class _NewNoteVIewState extends State<NewNoteVIew> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              _note = snapshot.data;
+              _note = snapshot.data as DatabaseNote;
+              devtool.log('note here $_note');
               _setupTextControllerListener();
               return TextField(
                 controller: _textController,

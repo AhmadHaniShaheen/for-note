@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fornote/constant/route.dart';
 import 'package:fornote/main.dart';
 import 'package:fornote/services/auth/auth_exceptions.dart';
-import 'package:fornote/services/auth/firebase_auth_services.dart';
+import 'package:fornote/services/auth/auth_service.dart';
 import 'package:fornote/utilities/show_snackbar_error.dart';
 import 'package:fornote/widgets/text_field_widget.dart';
 
@@ -138,7 +138,7 @@ class _LoginViewState extends State<LoginView> {
                             await AuthService.firebase()
                                 .logIn(email: email, password: password);
                             final user = AuthService.firebase().currentUser;
-                            if (user?.isEmailVerify ?? false) {
+                            if (user?.isEmailVerified ?? false) {
                               Future.delayed(
                                 Duration.zero,
                                 () {
@@ -187,7 +187,7 @@ class _LoginViewState extends State<LoginView> {
                               message: 'user not found',
                               error: true,
                             );
-                          } on GeneralAuthException {
+                          } on GenericAuthException {
                             showErrorSnackbar(
                               context,
                               message: 'Authntecation Error',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fornote/constant/route.dart';
 import 'package:fornote/services/auth/auth_exceptions.dart';
-import 'package:fornote/services/auth/firebase_auth_services.dart';
+import 'package:fornote/services/auth/auth_service.dart';
 import 'package:fornote/utilities/show_snackbar_error.dart';
 import 'package:fornote/widgets/text_field_widget.dart';
 // import 'dart:developer' as devtool show log;
@@ -137,7 +137,7 @@ class _RegisterViewState extends State<RegisterView> {
 
                           try {
                             await AuthService.firebase()
-                                .register(email: email, password: password);
+                                .createUser(email: email, password: password);
                             AuthService.firebase().sendEmailVerification();
                             Future.delayed(const Duration(seconds: 0), () {
                               Navigator.pushNamed(context, verifyEmailRoute);
@@ -148,7 +148,7 @@ class _RegisterViewState extends State<RegisterView> {
                               message: 'The Email & Password is requred',
                               error: true,
                             );
-                          } on WeekPasswordAuthException {
+                          } on WeakPasswordAuthException {
                             showErrorSnackbar(
                               context,
                               message: 'this is a weak-password',
@@ -166,7 +166,7 @@ class _RegisterViewState extends State<RegisterView> {
                               message: 'invalid email',
                               error: true,
                             );
-                          } on GeneralAuthException {
+                          } on GenericAuthException {
                             showErrorSnackbar(
                               context,
                               message: 'Authentcation Error',

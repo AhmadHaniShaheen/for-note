@@ -1,19 +1,58 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fornote/firebase_options.dart';
-import 'package:fornote/services/auth/auth_exceptions.dart';
-import 'package:fornote/services/auth/auth_provider.dart';
 import 'package:fornote/services/auth/auth_user.dart';
+import 'package:fornote/services/auth/auth_provider.dart';
+import 'package:fornote/services/auth/auth_exceptions.dart';
+
+import 'package:firebase_auth/firebase_auth.dart'
+    show FirebaseAuth, FirebaseAuthException;
 
 class FirebaseAuthProvider implements AuthProvider {
   @override
+  Future<void> initialize() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+
+  @override
+  Future<AuthUser> createUser({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final user = currentUser;
+      if (user != null) {
+        return user;
+      } else {
+        throw UserNotLoggedInAuthException();
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        throw WeakPasswordAuthException();
+      } else if (e.code == 'email-already-in-use') {
+        throw EmailAlreadyInUseAuthException();
+      } else if (e.code == 'invalid-email') {
+        throw InvalidEmailAuthException();
+      } else {
+        throw GenericAuthException();
+      }
+    } catch (_) {
+      throw GenericAuthException();
+    }
+  }
+
+  @override
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
-    // ignore: unnecessary_null_comparison
-    if (User != null) {
-      return AuthUser.formFirebase(user!);
+    if (user != null) {
+      return AuthUser.fromFirebase(user);
     } else {
-      throw UserNotLoggedInAuthException();
+      return null;
     }
   }
 
@@ -34,19 +73,15 @@ class FirebaseAuthProvider implements AuthProvider {
         throw UserNotLoggedInAuthException();
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'unknown') {
-        throw EmailAndPasswordRequriedAuthException();
-      } else if (e.code == 'invalid-email') {
-        throw InvalidEmailAuthException();
+      if (e.code == 'user-not-found') {
+        throw UserNotFoundAuthException();
       } else if (e.code == 'wrong-password') {
         throw WrongPasswordAuthException();
-      } else if (e.code == 'user-not-found') {
-        throw UserNotFoundAuthException();
       } else {
-        throw GeneralAuthException();
+        throw GenericAuthException();
       }
     } catch (_) {
-      throw GeneralAuthException();
+      throw GenericAuthException();
     }
   }
 
@@ -61,37 +96,6 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  Future<AuthUser> register({
-    required String email,
-    required String password,
-  }) async {
-    try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      final user = currentUser;
-      if (user != null) {
-        return user;
-      } else {
-        throw UserNotLoggedInAuthException();
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'unknown') {
-        throw EmailAndPasswordRequriedAuthException();
-      } else if (e.code == 'weak-password') {
-        throw WeekPasswordAuthException();
-      } else if (e.code == 'email-already-in-use') {
-        throw EmailAlreadyInUseAuthException();
-      } else if (e.code == 'invalid-email') {
-        throw InvalidEmailAuthException();
-      } else {
-        throw GeneralAuthException();
-      }
-    } catch (e) {
-      throw GeneralAuthException();
-    }
-  }
-
-  @override
   Future<void> sendEmailVerification() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -99,12 +103,5 @@ class FirebaseAuthProvider implements AuthProvider {
     } else {
       throw UserNotLoggedInAuthException();
     }
-  }
-
-  @override
-  Future<void> initialize() async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
   }
 }

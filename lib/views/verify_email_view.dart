@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fornote/services/auth/firebase_auth_services.dart';
+import 'package:fornote/services/auth/auth_service.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});

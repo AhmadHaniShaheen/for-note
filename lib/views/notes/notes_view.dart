@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fornote/constant/route.dart';
 import 'package:fornote/enum/menu_item.dart';
-import 'package:fornote/services/auth/firebase_auth_services.dart';
-import 'package:fornote/services/crud/notes_services.dart';
+import 'package:fornote/services/auth/auth_service.dart';
+import 'package:fornote/services/crud/notes_service.dart';
 
 class NoteView extends StatefulWidget {
   const NoteView({super.key});
@@ -14,18 +14,12 @@ class NoteView extends StatefulWidget {
 
 class _NoteViewState extends State<NoteView> {
   String get userEmail => AuthService.firebase().currentUser!.email!;
-  late final NotesServices _notesServices;
+  late final NotesService _notesServices;
 
   @override
   void initState() {
     super.initState();
-    _notesServices = NotesServices();
-  }
-
-  @override
-  void dispose() {
-    _notesServices.close();
-    super.dispose();
+    _notesServices = NotesService();
   }
 
   @override
@@ -69,16 +63,35 @@ class _NoteViewState extends State<NoteView> {
         ],
       ),
       body: FutureBuilder(
-        future: _notesServices.getOrCreateUSer(email: userEmail),
+        future: _notesServices.getOrCreateUser(email: userEmail),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               return StreamBuilder(
-                stream: _notesServices.allNote,
+                stream: _notesServices.allNotes,
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
-                      return const Text('wating to see notes');
+                    case ConnectionState.active:
+                      if (snapshot.hasData) {
+                        final allNote = snapshot.data as List<DatabaseNote>;
+                        return ListView.builder(
+                          itemCount: allNote.length,
+                          itemBuilder: (context, index) {
+                            final note = allNote[index];
+                            return ListTile(
+                              title: Text(
+                                note.text,
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
                     default:
                       return const CircularProgressIndicator();
                   }
