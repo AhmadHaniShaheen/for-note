@@ -8,7 +8,7 @@ import 'package:fornote/views/notes/new_note_view.dart';
 import 'package:fornote/views/notes/notes_view.dart';
 import 'package:fornote/views/register_view.dart';
 import 'package:fornote/views/verify_email_view.dart';
-import 'dart:developer' as devtool show log;
+// import 'dart:developer' as devtool show log;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -87,30 +87,3 @@ enum MenuAction {
   logOut,
 }
 
-Future<bool> logOutDilog(BuildContext context) {
-  return showDialog<bool>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('Log Out'),
-        content: const Text('Are you sure you wont to log out? '),
-        actions: [
-          TextButton(
-            onPressed: () {
-              devtool.log('false');
-              Navigator.of(context).pop(false);
-            },
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              devtool.log('true');
-              Navigator.of(context).pop(true);
-            },
-            child: const Text('Sure'),
-          ),
-        ],
-      );
-    },
-  ).then((value) => value ?? false);
-}
