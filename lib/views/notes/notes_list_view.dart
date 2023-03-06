@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:fornote/services/crud/notes_service.dart';
 import 'package:fornote/utilities/dialogs/delete_dialogs.dart';
 
-typedef DeleteNoteCallBack = void Function(DatabaseNote note);
+typedef NoteCallback = void Function(DatabaseNote note);
 
 class NotesListVeiw extends StatelessWidget {
   final List<DatabaseNote> notes;
-  final DeleteNoteCallBack onDeleteNote;
+  final NoteCallback onDeleteNote;
+  final NoteCallback onTap;
 
   const NotesListVeiw({
     super.key,
     required this.notes,
     required this.onDeleteNote,
+    required this.onTap,
   });
 
   @override
@@ -21,6 +23,9 @@ class NotesListVeiw extends StatelessWidget {
       itemBuilder: (context, index) {
         final note = notes[index];
         return ListTile(
+          onTap: () {
+            onTap(note);
+          },
           title: Text(
             note.text,
             maxLines: 1,

@@ -32,7 +32,7 @@ class _NoteViewState extends State<NoteView> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, newNoteRoute);
+                Navigator.pushNamed(context, createUpdateNoteRoute);
               },
               icon: const Icon(Icons.add)),
           PopupMenuButton<MenuAction>(
@@ -80,11 +80,17 @@ class _NoteViewState extends State<NoteView> {
                       if (snapshot.hasData) {
                         final allNote = snapshot.data as List<DatabaseNote>;
                         return NotesListVeiw(
-                          notes: allNote,
-                          onDeleteNote: (note) async {
-                            await _notesServices.deleteNote(id: note.id);
-                          },
-                        );
+                            onTap: (note) {
+                              Navigator.pushNamed(
+                                context,
+                                createUpdateNoteRoute,
+                                arguments: note,
+                              );
+                            },
+                            notes: allNote,
+                            onDeleteNote: (note) async {
+                              await _notesServices.deleteNote(id: note.id);
+                            });
                       } else {
                         return const CircularProgressIndicator();
                       }

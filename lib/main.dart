@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fornote/constant/route.dart';
 import 'package:fornote/firebase_options.dart';
 import 'package:fornote/views/login_view.dart';
-import 'package:fornote/views/notes/new_note_view.dart';
+import 'package:fornote/views/notes/create_update_note_view.dart';
 import 'package:fornote/views/notes/notes_view.dart';
 import 'package:fornote/views/register_view.dart';
 import 'package:fornote/views/verify_email_view.dart';
@@ -24,7 +24,7 @@ void main() {
         registerRoute: (context) => const RegisterView(),
         verifyEmailRoute: (context) => const VerifyEmailView(),
         noteRoute: (context) => const NoteView(),
-        newNoteRoute: (context) => const NewNoteView(),
+        createUpdateNoteRoute: (context) => const CreateUpdateNoteView(),
       },
     ),
   );
@@ -86,4 +86,3 @@ class _HomePageState extends State<HomePage> {
 enum MenuAction {
   logOut,
 }
-
