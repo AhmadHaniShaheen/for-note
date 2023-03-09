@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:fornote/extensions/list/filter.dart';
 import 'package:fornote/services/crud/crud_exceptions.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -8,6 +9,7 @@ import 'package:path/path.dart' show join;
 
 class NotesService {
   Database? _db;
+  DatabaseUser? _user;
 
   List<DatabaseNote> _notes = [];
 
@@ -23,14 +25,33 @@ class NotesService {
 
   late final StreamController<List<DatabaseNote>> _notesStreamController;
 
-  Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
+  Stream<List<DatabaseNote>> get allNotes =>
+      _notesStreamController.stream.filter((note) {
+        final currentUser = _user;
+        if (currentUser != null) {
+          print('error');
 
-  Future<DatabaseUser> getOrCreateUser({required String email}) async {
+          return note.userId == currentUser.id;
+        } else {
+          throw UserShouldBeSetBefoReadingAllNote();
+        }
+      });
+
+  Future<DatabaseUser> getOrCreateUser({
+    required String email,
+    bool setAsCreateUser = true,
+  }) async {
     try {
       final user = await getUser(email: email);
+      if (setAsCreateUser) {
+        _user = user;
+      }
       return user;
     } on CouldNotFindUser {
       final createdUser = await createUser(email: email);
+      if (setAsCreateUser) {
+        _user = createdUser;
+      }
       return createdUser;
     } catch (e) {
       rethrow;
@@ -54,10 +75,15 @@ class NotesService {
     await getNote(id: note.id);
 
     // update DB
-    final updatesCount = await db.update(noteTable, {
-      textColumn: text,
-      isSyncedWithCloudColumn: 0,
-    });
+    final updatesCount = await db.update(
+      noteTable,
+      {
+        textColumn: text,
+        isSyncedWithCloudColumn: 0,
+      },
+      where: 'id=?',
+      whereArgs: [note.id],
+    );
 
     if (updatesCount == 0) {
       throw CouldNotUpdateNote();
@@ -318,14 +344,12 @@ const emailColumn = 'email';
 const userIdColumn = 'user_id';
 const textColumn = 'text';
 const isSyncedWithCloudColumn = 'is_synced_with_cloud';
-const createUserTable =
-    '''CREATE TABLE IF NOT EXISTS "user" (
+const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
         "id"	INTEGER NOT NULL,
         "email"	TEXT NOT NULL UNIQUE,
         PRIMARY KEY("id" AUTOINCREMENT)
       );''';
-const createNoteTable =
-    '''CREATE TABLE IF NOT EXISTS "note" (
+const createNoteTable = '''CREATE TABLE IF NOT EXISTS "note" (
         "id"	INTEGER NOT NULL,
         "user_id"	INTEGER NOT NULL,
         "text"	TEXT,
