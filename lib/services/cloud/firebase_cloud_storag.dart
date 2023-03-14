@@ -37,7 +37,7 @@ class FirebaseCloudStorag {
           )
           .get()
           .then((value) {
-        return value.docs.map((doc) {
+          return value.docs.map((doc) {
           // return CloudNote(
           //     documentId: doc.id,
           //     ownerUserId: ownerUserId,
