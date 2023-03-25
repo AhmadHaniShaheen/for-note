@@ -7,7 +7,7 @@
 // import 'package:path_provider/path_provider.dart';
 // import 'package:path/path.dart' show join;
 
-// class NotesService {
+// class NotesSer vice {
 //   Database? _db;
 //   DatabaseUser? _user;
 
