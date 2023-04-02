@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fornote/constant/route.dart';
 import 'package:fornote/enums/menu_item.dart';
 import 'package:fornote/services/auth/auth_service.dart';
+import 'package:fornote/services/auth/bloc/auth_bloc.dart';
+import 'package:fornote/services/auth/bloc/auth_event.dart';
 import 'package:fornote/services/cloud/cloud_note.dart';
 import 'package:fornote/services/cloud/firebase_cloud_storag.dart';
-import 'package:fornote/utilities/dialogs/logout_dialogs.dart';
+import 'package:fornote/utilities/dialogs/logout_dialog.dart';
 import 'package:fornote/views/notes/notes_list_view.dart';
 
 class NoteView extends StatefulWidget {
@@ -37,32 +40,26 @@ class _NoteViewState extends State<NoteView> {
               },
               icon: const Icon(Icons.add)),
           PopupMenuButton<MenuAction>(
-            itemBuilder: (context) {
-              return [
-                const PopupMenuItem<MenuAction>(
-                  value: MenuAction.logOut,
-                  child: Text('Log out'),
-                ),
-              ];
-            },
             onSelected: (value) async {
               switch (value) {
                 case MenuAction.logOut:
                   final shouldLogout = await showLogoutDialog(
                       context: context,
-                      content: 'Are you sure you wont to logout?');
+                      content: 'Are you Sure you wont to log out?');
                   if (shouldLogout) {
-                    FirebaseAuth.instance.signOut();
-                    Future.delayed(
-                      const Duration(seconds: 0),
-                      () {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, loginRoute, (_) => false);
-                      },
-                    );
+                    context.read<AuthBloc>().add(
+                          const AuthEventLogOut(),
+                        );
                   }
-                  break;
               }
+            },
+            itemBuilder: (context) {
+              return const [
+                PopupMenuItem<MenuAction>(
+                  value: MenuAction.logOut,
+                  child: Text('Log out'),
+                ),
+              ];
             },
           )
         ],

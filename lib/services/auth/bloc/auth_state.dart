@@ -1,11 +1,18 @@
 import 'package:fornote/services/auth/auth_user.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class AuthState {
   const AuthState();
 }
 
-class AuthStateLoading extends AuthState {
-  const AuthStateLoading();
+class AuthStateUnintialized extends AuthState {
+  const AuthStateUnintialized();
+}
+
+
+class AuthStateRegistering extends AuthState {
+  final Exception exception;
+  const AuthStateRegistering(this.exception);
 }
 
 class AuthStateLogedIn extends AuthState {
@@ -13,19 +20,15 @@ class AuthStateLogedIn extends AuthState {
   const AuthStateLogedIn(this.user);
 }
 
-
 class AuthStateNeedVerification extends AuthState {
   const AuthStateNeedVerification();
 }
 
-class AuthStateLogOut extends AuthState {
+class AuthStateLogOut extends AuthState with EquatableMixin {
   final Exception? exception;
-  const AuthStateLogOut(this.exception);
-}
+  final bool isLoading;
+  const AuthStateLogOut(this.exception, this.isLoading);
 
-class AuthStateLogedOutFailure extends AuthState {
-  final Exception exception;
-  const AuthStateLogedOutFailure(this.exception);
+  @override
+  List<Object?> get props => [exception, isLoading];
 }
-
-// Auth Event in new File.  

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:fornote/utilities/dialogs/genric_dialogs.dart';
+import 'package:fornote/utilities/dialogs/genric_dialog.dart';
 
-Future<bool> showDeleteDialog({
+Future<bool> showLogoutDialog({
   required BuildContext context,
   required String content,
 }) {
-  return showGenericDialog(
+  return showGenericDialog<bool>(
     context: context,
-    title: 'Delete Item',
+    title: 'Logout',
     content: content,
     optionBuilder: () => {
       'Cancel': false,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fornote/utilities/dialogs/genric_dialogs.dart';
+import 'package:fornote/utilities/dialogs/genric_dialog.dart';
 
 Future<void> showErrorDialog({
   required BuildContext context,
