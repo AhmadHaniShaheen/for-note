@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fornote/constant/route.dart';
+import 'package:fornote/helpers/loading/loading_screen.dart';
 import 'package:fornote/services/auth/bloc/auth_bloc.dart';
 import 'package:fornote/services/auth/bloc/auth_event.dart';
 import 'package:fornote/services/auth/bloc/auth_state.dart';
@@ -63,7 +64,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     context.read<AuthBloc>().add(const AuthEventIntialize());
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.isLoading) {
+          LoadingScreen().show(
+              context: context,
+              text: state.loadingText ?? 'Please wait a mommint');
+        } else {
+          LoadingScreen().hide();
+        }
+      },
       builder: (context, state) {
         if (state is AuthStateLogedIn) {
           return const NoteView();
@@ -80,10 +90,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-// how to make ElevatedButton in flutter?
-
-// how can i add new folder in lib using terminal?
-
-// how can I add

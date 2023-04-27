@@ -7,17 +7,21 @@ CloseDialog showLoadingDialog({
   required String text,
 }) {
   final dialog = AlertDialog(
-    content: Column(mainAxisSize: MainAxisSize.min, children: [
-      const CircularProgressIndicator(),
-      const SizedBox(height: 10),
-      Text(text),
-    ]),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const CircularProgressIndicator(),
+        const SizedBox(height: 10.0),
+        Text(text),
+      ],
+    ),
   );
 
   showDialog(
     context: context,
-    builder: (context) => dialog,
     barrierDismissible: false,
+    builder: (context) => dialog,
   );
-  return () => Navigator.pop(context);
+
+  return () => Navigator.of(context).pop();
 }

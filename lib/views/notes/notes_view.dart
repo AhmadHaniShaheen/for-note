@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fornote/constant/route.dart';
@@ -47,6 +46,7 @@ class _NoteViewState extends State<NoteView> {
                       context: context,
                       content: 'Are you Sure you wont to log out?');
                   if (shouldLogout) {
+                    // ignore: use_build_context_synchronously
                     context.read<AuthBloc>().add(
                           const AuthEventLogOut(),
                         );
