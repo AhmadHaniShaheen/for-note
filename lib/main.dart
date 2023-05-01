@@ -6,6 +6,7 @@ import 'package:fornote/services/auth/bloc/auth_bloc.dart';
 import 'package:fornote/services/auth/bloc/auth_event.dart';
 import 'package:fornote/services/auth/bloc/auth_state.dart';
 import 'package:fornote/services/auth/firebase_auth_provider.dart';
+import 'package:fornote/views/forgot_password_view.dart';
 import 'package:fornote/views/login_view.dart';
 import 'package:fornote/views/notes/create_update_note_view.dart';
 import 'package:fornote/views/notes/notes_view.dart';
@@ -18,48 +19,22 @@ void main() {
   runApp(
     MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
       home: BlocProvider<AuthBloc>(
         create: (context) => AuthBloc(FirebaseAuthProvider()),
         child: const HomePage(),
       ),
-      debugShowCheckedModeBanner: false,
       routes: {
-        loginRoute: (context) => const LoginView(),
-        registerRoute: (context) => const RegisterView(),
-        verifyEmailRoute: (context) => const VerifyEmailView(),
-        noteRoute: (context) => const NoteView(),
         createUpdateNoteRoute: (context) => const CreateUpdateNoteView(),
       },
     ),
   );
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  late final TextEditingController _email;
-  late final TextEditingController _password;
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    _email = TextEditingController();
-    _password = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _email.dispose();
-    _password.dispose();
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +43,9 @@ class _HomePageState extends State<HomePage> {
       listener: (context, state) {
         if (state.isLoading) {
           LoadingScreen().show(
-              context: context,
-              text: state.loadingText ?? 'Please wait a mommint');
+            context: context,
+            text: state.loadingText ?? 'Please wait a moment',
+          );
         } else {
           LoadingScreen().hide();
         }
@@ -81,9 +57,13 @@ class _HomePageState extends State<HomePage> {
           return const VerifyEmailView();
         } else if (state is AuthStateLogOut) {
           return const LoginView();
+        } else if (state is AuthStateForgotPassword) {
+          return const ForgotPasswordView();
+        } else if (state is AuthStateRegistering) {
+          return const RegisterView();
         } else {
           return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+            body: CircularProgressIndicator(),
           );
         }
       },

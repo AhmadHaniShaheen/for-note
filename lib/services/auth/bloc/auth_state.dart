@@ -18,14 +18,29 @@ class AuthStateUnintialized extends AuthState {
         );
 }
 
+// class AuthStateRegistering extends AuthState {
+//   final Exception? exception;
+//   const AuthStateRegistering({
+//     required this.exception,
+//     required isLoading,
+//   }) : super(isLoading: isLoading);
+// }
 class AuthStateRegistering extends AuthState {
-  final Exception exception;
+  final Exception? exception;
   const AuthStateRegistering({
     required this.exception,
     required isLoading,
-  }) : super(
-          isLoading: isLoading,
-        );
+  }) : super(isLoading: isLoading);
+}
+
+class AuthStateForgotPassword extends AuthState {
+  final Exception? exception;
+  final bool hasSendEmail;
+  const AuthStateForgotPassword({
+    required this.hasSendEmail,
+    required this.exception,
+    required isLoading,
+  }) : super(isLoading: isLoading);
 }
 
 class AuthStateLogedIn extends AuthState {

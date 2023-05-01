@@ -106,7 +106,7 @@ class _RegisterViewState extends State<RegisterView> {
                       height: 14,
                     ),
                     const Text(
-                      'create a new account',
+                      'Register Screen',
                       style: TextStyle(
                         fontSize: 14,
                       ),

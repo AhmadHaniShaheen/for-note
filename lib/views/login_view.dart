@@ -74,7 +74,7 @@ class _LoginViewState extends State<LoginView> {
                       height: 20,
                     ),
                     const Text(
-                      "Let's Get Started",
+                      "Login View",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -155,16 +155,20 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed(registerRoute);
+                        context.read<AuthBloc>().add(
+                              AuthEventForgotPassword(),
+                            );
                       },
-                      child: const Text(
-                        'Don\'t have an acount, Register Now',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 55, 46, 46),
-                        ),
-                      ),
+                      child: const Text('I forgot my password'),
                     ),
+                    TextButton(
+                      onPressed: () {
+                        context.read<AuthBloc>().add(
+                              const AuthEventShouldRegister(),
+                            );
+                      },
+                      child: const Text('Not registered yet? Register here!'),
+                    )
                   ],
                 ),
               ),

@@ -3,6 +3,10 @@ import 'package:fornote/services/auth/auth_user.dart';
 abstract class AuthProvider {
   Future<void> initialize();
   AuthUser? get currentUser;
+
+  Future<void> sendPasswordRest({
+    required String toEmail,
+  });
   Future<AuthUser> logIn({
     required String email,
     required String password,
