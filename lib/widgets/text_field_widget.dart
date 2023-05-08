@@ -5,6 +5,7 @@ Widget textFormField({
   required bool obscureText,
   required bool autocorrect,
   required bool suggestions,
+  required bool autofocus,
   required String hintText,
   required Icon textFieldIcon,
   required TextEditingController controller,

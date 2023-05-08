@@ -6,6 +6,7 @@ import 'package:fornote/services/auth/bloc/auth_event.dart';
 import 'package:fornote/services/auth/bloc/auth_state.dart';
 import 'package:fornote/utilities/show_snackbar_error.dart';
 import 'package:fornote/widgets/text_field_widget.dart';
+import 'package:google_fonts/google_fonts.dart';
 // import 'dart:developer' as devtool show log;
 
 class RegisterView extends StatefulWidget {
@@ -18,6 +19,8 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  var showpassword = true;
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -81,35 +84,53 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 62),
               child: Form(
                 // key: formKey,
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 112,
-                    ),
-                    const Image(
-                      image: AssetImage('images/logo.png'),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      "Let's Get Started",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: const Color(0xffE8ECF4),
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(7),
+                          color: Colors.transparent,
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            context
+                                .read<AuthBloc>()
+                                .add(const AuthEventLogOut());
+                          },
+                          icon: const Padding(
+                            padding: EdgeInsets.only(left: 4),
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              size: 20,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(
-                      height: 14,
+                      height: 28,
                     ),
-                    const Text(
-                      'Register Screen',
-                      style: TextStyle(
-                        fontSize: 14,
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Hello! Register to get started',
+                        style: GoogleFonts.urbanist(
+                            fontSize: 30, fontWeight: FontWeight.bold),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 32,
                     ),
                     const SizedBox(
                       height: 14,
@@ -119,12 +140,13 @@ class _RegisterViewState extends State<RegisterView> {
                       obscureText: false,
                       autocorrect: true,
                       suggestions: true,
-                      hintText: 'Enter your Email here',
+                      hintText: 'Enter your email here',
                       textFieldIcon: const Icon(Icons.email),
                       controller: _email,
+                      autofocus: true,
                       validator: (value) {
                         if (value.isEmpty || value == null) {
-                          return 'Please, Enter your Email';
+                          return 'Please, Enter your email';
                         } else if (value.isNotEmpty && value.length < 4) {
                           return 'Please, your email is so short';
                         } else if (!value.contains("@") ||
@@ -140,20 +162,27 @@ class _RegisterViewState extends State<RegisterView> {
                     ),
                     textFormField(
                       keyboardT: TextInputType.text,
-                      obscureText: false,
+                      obscureText: showpassword,
                       autocorrect: false,
+                      autofocus: false,
                       suggestions: false,
-                      hintText: 'Enter your Email here',
+                      hintText: 'Enter your password',
                       textFieldIcon: const Icon(Icons.email),
                       controller: _password,
+                      suffix: Icons.remove_red_eye_sharp,
+                      suffixPressed: () {
+                        setState(() {
+                          showpassword = !showpassword;
+                        });
+                      },
                       validator: (value) {
                         if (value.isEmpty || value == null) {
-                          return 'Please, Enter your Email';
+                          return 'Please, Enter your password';
                         } else if (value.isNotEmpty && value.length < 4) {
-                          return 'Please, your email is so short';
+                          return 'Please, your password is so short';
                         } else if (!value.contains("@") ||
                             !value.contains(".")) {
-                          return 'Please, Enter a vaild email ';
+                          return 'Please, Enter a vaild password ';
                         } else {
                           return null;
                         }
@@ -170,7 +199,10 @@ class _RegisterViewState extends State<RegisterView> {
                         final email = _email.text;
                         final password = _password.text;
                         context.read<AuthBloc>().add(
-                              AuthEventRegistering(email, password),
+                              AuthEventRegistering(
+                                email,
+                                password,
+                              ),
                             );
                         context.read<AuthBloc>().add(
                               const AuthEventSendEmailVerification(),
@@ -178,19 +210,35 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                       child: const Text('Register'),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        context.read<AuthBloc>().add(
-                              const AuthEventLogOut(),
-                            );
-                      },
-                      child: const Text(
-                        'already have an acount, Login Now',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 55, 46, 46),
-                        ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Already have an account? ',
+                            style: GoogleFonts.urbanist(
+                              color: const Color(0xff1E232C),
+                              fontSize: 15,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              context.read<AuthBloc>().add(
+                                    const AuthEventLogOut(),
+                                  );
+                            },
+                            child: Text(
+                              'Login Now',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 15,
+                                color: const Color(0xff35C2C1),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),

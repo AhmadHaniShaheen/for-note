@@ -12,6 +12,7 @@ import 'package:fornote/views/notes/create_update_note_view.dart';
 import 'package:fornote/views/notes/notes_view.dart';
 import 'package:fornote/views/register_view.dart';
 import 'package:fornote/views/verify_email_view.dart';
+
 // import 'dart:developer' as devtool show log;
 
 void main() {
