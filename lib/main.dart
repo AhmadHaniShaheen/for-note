@@ -12,6 +12,7 @@ import 'package:fornote/views/notes/create_update_note_view.dart';
 import 'package:fornote/views/notes/notes_view.dart';
 import 'package:fornote/views/register_view.dart';
 import 'package:fornote/views/verify_email_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // import 'dart:developer' as devtool show log;
 
@@ -19,6 +20,8 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,

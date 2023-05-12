@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fornote/extensions/build_contex/loc.dart';
 import 'package:fornote/services/auth/bloc/auth_bloc.dart';
 import 'package:fornote/services/auth/bloc/auth_event.dart';
 import 'package:fornote/services/auth/bloc/auth_state.dart';
@@ -44,8 +45,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             // ignore: use_build_context_synchronously
             await showErrorDialog(
                 context: context,
-                content:
-                    'we could not process your request, please make sure that you are register user');
+                // ignore: use_build_context_synchronously
+                content: context.loc.forgot_password_view_generic_error);
           }
         }
       },
@@ -87,7 +88,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'Forgot Password?',
+                  context.loc.forgot_password,
                   style: GoogleFonts.urbanist(
                       fontSize: 30, fontWeight: FontWeight.bold),
                 ),
@@ -96,7 +97,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 height: 14,
               ),
               Text(
-                'Don\'t worry! It occurs. Please enter the email address linked with your account.',
+                context.loc.forgot_password_description_view,
                 style: GoogleFonts.urbanist(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -111,16 +112,14 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 autocorrect: true,
                 suggestions: true,
                 autofocus: true,
-                hintText: 'Enter your email here',
+                hintText: context.loc.email_text_field_placeholder,
                 textFieldIcon: const Icon(Icons.email),
                 controller: _controller,
                 validator: (value) {
                   if (value.isEmpty || value == null) {
-                    return 'Please, Enter your email';
-                  } else if (value.isNotEmpty && value.length < 4) {
-                    return 'Please, your email is so short';
+                    return context.loc.email_text_field_placeholder;
                   } else if (!value.contains("@") || !value.contains(".")) {
-                    return 'Please, Enter a vaild email ';
+                    return context.loc.register_error_invalid_email;
                   } else {
                     return null;
                   }
@@ -139,7 +138,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                         email: email,
                       ));
                 },
-                child: const Text('Reset Password'),
+                child: Text(context.loc.password_reset),
               ),
               const SizedBox(
                 height: 8,
@@ -151,7 +150,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 onPressed: () async {
                   context.read<AuthBloc>().add(const AuthEventLogOut());
                 },
-                child: const Text('Go Back to Login'),
+                child: Text(context.loc.forgot_password_view_back_to_login),
               ),
             ],
           ),

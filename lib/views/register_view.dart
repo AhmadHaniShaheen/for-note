@@ -7,6 +7,7 @@ import 'package:fornote/services/auth/bloc/auth_state.dart';
 import 'package:fornote/utilities/show_snackbar_error.dart';
 import 'package:fornote/widgets/text_field_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:fornote/extensions/build_contex/loc.dart';
 // import 'dart:developer' as devtool show log;
 
 class RegisterView extends StatefulWidget {
@@ -45,31 +46,31 @@ class _RegisterViewState extends State<RegisterView> {
           if (state.exception is EmailAndPasswordRequriedAuthException) {
             showErrorSnackbar(
               context,
-              message: 'The Email & Password is requred',
+              message: context.loc.register_view_prompt,
               error: true,
             );
           } else if (state.exception is WeakPasswordAuthException) {
             showErrorSnackbar(
               context,
-              message: 'this is a weak-password',
+              message: context.loc.register_error_weak_password,
               error: true,
             );
           } else if (state.exception is EmailAlreadyInUseAuthException) {
             showErrorSnackbar(
               context,
-              message: 'email already in use',
+              message: context.loc.register_error_email_already_in_use,
               error: true,
             );
           } else if (state.exception is InvalidEmailAuthException) {
             showErrorSnackbar(
               context,
-              message: 'invalid email',
+              message: context.loc.register_error_invalid_email,
               error: true,
             );
           } else if (state.exception is GenericAuthException) {
             showErrorSnackbar(
               context,
-              message: 'Authentcation Error',
+              message: context.loc.register_error_generic,
               error: true,
             );
           }
@@ -124,7 +125,7 @@ class _RegisterViewState extends State<RegisterView> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Hello! Register to get started',
+                        context.loc.register_welcome,
                         style: GoogleFonts.urbanist(
                             fontSize: 30, fontWeight: FontWeight.bold),
                       ),
@@ -140,18 +141,16 @@ class _RegisterViewState extends State<RegisterView> {
                       obscureText: false,
                       autocorrect: true,
                       suggestions: true,
-                      hintText: 'Enter your email here',
+                      hintText: context.loc.email_text_field_placeholder,
                       textFieldIcon: const Icon(Icons.email),
                       controller: _email,
                       autofocus: true,
                       validator: (value) {
                         if (value.isEmpty || value == null) {
-                          return 'Please, Enter your email';
-                        } else if (value.isNotEmpty && value.length < 4) {
-                          return 'Please, your email is so short';
+                          return context.loc.email_text_field_placeholder;
                         } else if (!value.contains("@") ||
                             !value.contains(".")) {
-                          return 'Please, Enter a vaild email ';
+                          return context.loc.register_error_invalid_email;
                         } else {
                           return null;
                         }
@@ -166,7 +165,7 @@ class _RegisterViewState extends State<RegisterView> {
                       autocorrect: false,
                       autofocus: false,
                       suggestions: false,
-                      hintText: 'Enter your password',
+                      hintText: context.loc.password_text_field_placeholder,
                       textFieldIcon: const Icon(Icons.email),
                       controller: _password,
                       suffix: Icons.remove_red_eye_sharp,
@@ -177,12 +176,9 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                       validator: (value) {
                         if (value.isEmpty || value == null) {
-                          return 'Please, Enter your password';
+                          return context.loc.password_text_field_placeholder;
                         } else if (value.isNotEmpty && value.length < 4) {
-                          return 'Please, your password is so short';
-                        } else if (!value.contains("@") ||
-                            !value.contains(".")) {
-                          return 'Please, Enter a vaild password ';
+                          return context.loc.register_error_weak_password;
                         } else {
                           return null;
                         }
@@ -208,7 +204,7 @@ class _RegisterViewState extends State<RegisterView> {
                               const AuthEventSendEmailVerification(),
                             );
                       },
-                      child: const Text('Register'),
+                      child: Text(context.loc.register),
                     ),
                     Align(
                       alignment: Alignment.center,
@@ -216,7 +212,7 @@ class _RegisterViewState extends State<RegisterView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Already have an account? ',
+                            context.loc.register_view_already_registered,
                             style: GoogleFonts.urbanist(
                               color: const Color(0xff1E232C),
                               fontSize: 15,
@@ -229,7 +225,7 @@ class _RegisterViewState extends State<RegisterView> {
                                   );
                             },
                             child: Text(
-                              'Login Now',
+                              context.loc.login_now,
                               style: GoogleFonts.urbanist(
                                 fontSize: 15,
                                 color: const Color(0xff35C2C1),

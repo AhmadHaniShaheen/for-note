@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fornote/extensions/build_contex/loc.dart';
 import 'package:fornote/services/auth/auth_exceptions.dart';
 import 'package:fornote/services/auth/bloc/auth_bloc.dart';
 import 'package:fornote/services/auth/bloc/auth_event.dart';
@@ -71,7 +72,7 @@ class _LoginViewState extends State<LoginView> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Welcome!\nGlad to see you here!',
+                        context.loc.login_welecom,
                         style: GoogleFonts.urbanist(
                             fontSize: 30, fontWeight: FontWeight.bold),
                       ),
@@ -88,17 +89,17 @@ class _LoginViewState extends State<LoginView> {
                       obscureText: false,
                       autocorrect: true,
                       suggestions: true,
-                      hintText: 'Enter your email',
+                      hintText: context.loc.email_text_field_placeholder,
                       textFieldIcon: const Icon(Icons.email),
                       controller: _email,
                       validator: (value) {
                         if (value.isEmpty || value == null) {
-                          return 'Please, Enter your email';
+                          return context.loc.email_text_field_placeholder;
                         } else if (value.isNotEmpty && value.length < 4) {
-                          return 'Please, your email is so short';
+                          return context.loc.email_text_field_short;
                         } else if (!value.contains("@") ||
                             !value.contains(".")) {
-                          return 'Please, Enter a vaild email ';
+                          return context.loc.login_error_cannot_find_user;
                         } else {
                           return null;
                         }
@@ -113,7 +114,7 @@ class _LoginViewState extends State<LoginView> {
                       obscureText: showpassword,
                       autocorrect: false,
                       suggestions: false,
-                      hintText: 'Enter your password',
+                      hintText: context.loc.password_text_field_placeholder,
                       textFieldIcon: const Icon(Icons.email),
                       controller: _password,
                       suffix: Icons.remove_red_eye_sharp,
@@ -124,7 +125,7 @@ class _LoginViewState extends State<LoginView> {
                       },
                       validator: (value) {
                         if (value.isEmpty || value == null) {
-                          return 'Please, Enter your password';
+                          return context.loc.password_text_field_placeholder;
                         } else if (value.isNotEmpty && value.length < 4) {
                           return 'Please, your password is so short';
                         } else if (!value.contains("@") ||
@@ -139,11 +140,11 @@ class _LoginViewState extends State<LoginView> {
                       onPressed: () {
                         context.read<AuthBloc>().add(AuthEventForgotPassword());
                       },
-                      child: const Align(
+                      child: Align(
                         alignment: Alignment.topRight,
                         child: Text(
-                          'Forgot Password?',
-                          style: TextStyle(
+                          context.loc.forgot_password,
+                          style: const TextStyle(
                             color: Color(
                               0xff6A707C,
                             ),
@@ -166,7 +167,7 @@ class _LoginViewState extends State<LoginView> {
                             .read<AuthBloc>()
                             .add(AuthEventLogIn(email, password));
                       },
-                      child: const Text('Login'),
+                      child: Text(context.loc.login),
                     ),
                     Align(
                       alignment: Alignment.center,
@@ -174,7 +175,7 @@ class _LoginViewState extends State<LoginView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Don’t have an account?',
+                            context.loc.login_view_not_registered_yet,
                             style: GoogleFonts.urbanist(
                               color: const Color(0xff1E232C),
                               fontSize: 15,
@@ -187,7 +188,7 @@ class _LoginViewState extends State<LoginView> {
                                   );
                             },
                             child: Text(
-                              'Register Now',
+                              context.loc.register,
                               style: GoogleFonts.urbanist(
                                 fontSize: 15,
                                 color: const Color(0xff35C2C1),
