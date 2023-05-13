@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fornote/constant/route.dart';
 import 'package:fornote/enums/menu_item.dart';
+import 'package:fornote/extensions/build_contex/loc.dart';
 import 'package:fornote/services/auth/auth_service.dart';
 import 'package:fornote/services/auth/bloc/auth_bloc.dart';
 import 'package:fornote/services/auth/bloc/auth_event.dart';
@@ -31,7 +32,7 @@ class _NoteViewState extends State<NoteView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Notes'),
+        title: Text(context.loc.notes_first_title),
         actions: [
           IconButton(
               onPressed: () {
@@ -44,7 +45,7 @@ class _NoteViewState extends State<NoteView> {
                 case MenuAction.logOut:
                   final shouldLogout = await showLogoutDialog(
                       context: context,
-                      content: 'Are you Sure you wont to log out?');
+                      content: context.loc.logout_dialog_prompt);
                   if (shouldLogout) {
                     // ignore: use_build_context_synchronously
                     context.read<AuthBloc>().add(
@@ -54,10 +55,10 @@ class _NoteViewState extends State<NoteView> {
               }
             },
             itemBuilder: (context) {
-              return const [
+              return [
                 PopupMenuItem<MenuAction>(
                   value: MenuAction.logOut,
-                  child: Text('Log out'),
+                  child: Text(context.loc.logout_button),
                 ),
               ];
             },

@@ -69,8 +69,8 @@ class _LoginViewState extends State<LoginView> {
                     const SizedBox(
                       height: 112,
                     ),
-                    Align(
-                      alignment: Alignment.topLeft,
+                    SizedBox(
+                      width: double.infinity,
                       child: Text(
                         context.loc.login_welecom,
                         style: GoogleFonts.urbanist(

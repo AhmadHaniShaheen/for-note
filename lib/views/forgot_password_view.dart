@@ -85,8 +85,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               const SizedBox(
                 height: 28,
               ),
-              Align(
-                alignment: Alignment.topLeft,
+              SizedBox(
+                width: double.infinity,
                 child: Text(
                   context.loc.forgot_password,
                   style: GoogleFonts.urbanist(

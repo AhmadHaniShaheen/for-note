@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fornote/services/auth/auth_service.dart';
 import 'package:fornote/services/auth/bloc/auth_event.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:fornote/extensions/build_contex/loc.dart';
 
 import '../services/auth/bloc/auth_bloc.dart';
 
@@ -55,7 +56,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'Verify your email',
+                  context.loc.verify_email,
                   style: GoogleFonts.urbanist(
                       fontSize: 30, fontWeight: FontWeight.bold),
                 ),
@@ -64,7 +65,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                 height: 14,
               ),
               Text(
-                'we\'ve sent to you email to verify your email, cleck to Veriry, then go back to Login view',
+                context.loc.verify_email_view_prompt,
                 style: GoogleFonts.urbanist(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -74,7 +75,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                 height: 14,
               ),
               Text(
-                "if you doe's not reseve an email, click to this button to send Verification code",
+                context.loc.verify_email_sent_email_again,
                 style: GoogleFonts.urbanist(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -90,7 +91,8 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                 onPressed: () async {
                   AuthService.firebase().sendEmailVerification();
                 },
-                child: const Text('send email to Verifyication again'),
+                child: Text(
+                    context.loc.verify_email_send_email_verification_button),
               ),
               const SizedBox(
                 height: 8,

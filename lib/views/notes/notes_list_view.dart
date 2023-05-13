@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fornote/extensions/build_contex/loc.dart';
 import 'package:fornote/services/cloud/cloud_note.dart';
 import 'package:fornote/utilities/dialogs/delete_dialog.dart';
 
@@ -35,8 +36,7 @@ class NotesListVeiw extends StatelessWidget {
           trailing: IconButton(
               onPressed: () async {
                 final shouldDelete = await showDeleteDialog(
-                    context: context,
-                    content: 'Are you sure you wont to delete this item?');
+                    context: context, content: context.loc.delete_note_prompt);
                 if (shouldDelete) {
                   onDeleteNote(note);
                 }

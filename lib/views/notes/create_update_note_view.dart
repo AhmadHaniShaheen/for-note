@@ -4,8 +4,7 @@ import 'package:fornote/services/cloud/cloud_note.dart';
 import 'package:fornote/services/cloud/firebase_cloud_storag.dart';
 import 'package:fornote/utilities/dialogs/cannot_share_empty_note_dialog.dart';
 import 'package:share_plus/share_plus.dart';
-import 'dart:developer' as devtool show log;
-
+import 'package:fornote/extensions/build_contex/loc.dart';
 import 'package:fornote/utilities/generics/get_argument.dart';
 
 class CreateUpdateNoteView extends StatefulWidget {
@@ -87,7 +86,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Note '),
+        title: Text(context.loc.new_note),
         actions: [
           IconButton(
               onPressed: () async {
@@ -106,14 +105,13 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              devtool.log('note here $_note');
               _setupTextControllerListener();
               return TextField(
                 controller: _textController,
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 decoration:
-                    const InputDecoration(hintText: 'start typing your note'),
+                    InputDecoration(hintText: context.loc.new_note_placeholder),
               );
             default:
               return const CircularProgressIndicator();
