@@ -10,6 +10,7 @@ import 'package:fornote/services/cloud/cloud_note.dart';
 import 'package:fornote/services/cloud/firebase_cloud_storag.dart';
 import 'package:fornote/utilities/dialogs/logout_dialog.dart';
 import 'package:fornote/views/notes/notes_list_view.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NoteView extends StatefulWidget {
   const NoteView({super.key});
@@ -32,38 +33,92 @@ class _NoteViewState extends State<NoteView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.loc.notes_first_title),
+        automaticallyImplyLeading: false,
+        toolbarHeight: 70.0,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: Text(
+            context.loc.notes_first_title,
+            style: GoogleFonts.urbanist(
+                color: const Color(0xff1C2760),
+                fontSize: 24,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
         actions: [
-          IconButton(
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: IconButton(
               onPressed: () {
                 Navigator.pushNamed(context, createUpdateNoteRoute);
               },
-              icon: const Icon(Icons.add)),
-          PopupMenuButton<MenuAction>(
-            onSelected: (value) async {
-              switch (value) {
-                case MenuAction.logOut:
-                  final shouldLogout = await showLogoutDialog(
-                      context: context,
-                      content: context.loc.logout_dialog_prompt);
-                  if (shouldLogout) {
-                    // ignore: use_build_context_synchronously
-                    context.read<AuthBloc>().add(
-                          const AuthEventLogOut(),
-                        );
-                  }
-              }
-            },
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem<MenuAction>(
-                  value: MenuAction.logOut,
-                  child: Text(context.loc.logout_button),
-                ),
-              ];
-            },
+              icon: const Icon(
+                Icons.add,
+              ),
+              color: const Color(0xff9098B1),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: PopupMenuButton<MenuAction>(
+              color: const Color(0xff9098B1),
+              onSelected: (value) async {
+                switch (value) {
+                  case MenuAction.logOut:
+                    final shouldLogout = await showLogoutDialog(
+                        context: context,
+                        content: context.loc.logout_dialog_prompt);
+                    if (shouldLogout) {
+                      // ignore: use_build_context_synchronously
+                      context.read<AuthBloc>().add(
+                            const AuthEventLogOut(),
+                          );
+                    }
+                }
+              },
+              itemBuilder: (context) {
+                return [
+                  PopupMenuItem<MenuAction>(
+                    value: MenuAction.logOut,
+                    child: Text(context.loc.logout_button),
+                  ),
+                ];
+              },
+            ),
           )
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(4.0),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16.0, bottom: 8),
+                  child: StreamBuilder(
+                      stream: _notesServices
+                          .getAllNote(ownerUserId: userId)
+                          .getLength,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final noteCount = snapshot.data ?? 0;
+                          final text = context.loc.notes_title(noteCount);
+                          return Text(text);
+                        } else {
+                          return const Text('');
+                        }
+                      }),
+                ),
+              ),
+              Container(
+                color: const Color.fromARGB(255, 213, 215, 215),
+                height: 4.0,
+              ),
+            ],
+          ),
+        ),
       ),
       body: StreamBuilder(
         stream: _notesServices.getAllNote(ownerUserId: userId),
@@ -96,4 +151,8 @@ class _NoteViewState extends State<NoteView> {
       ),
     );
   }
+}
+
+extension Count<T extends Iterable> on Stream<T> {
+  Stream<int> get getLength => map((event) => event.length);
 }

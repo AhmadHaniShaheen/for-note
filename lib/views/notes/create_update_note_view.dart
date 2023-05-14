@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fornote/constant/route.dart';
 import 'package:fornote/services/auth/auth_service.dart';
 import 'package:fornote/services/cloud/cloud_note.dart';
 import 'package:fornote/services/cloud/firebase_cloud_storag.dart';
 import 'package:fornote/utilities/dialogs/cannot_share_empty_note_dialog.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:fornote/extensions/build_contex/loc.dart';
 import 'package:fornote/utilities/generics/get_argument.dart';
@@ -86,9 +88,27 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.loc.new_note),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, noteRoute);
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+          color: const Color(0xff9098B1),
+        ),
+        toolbarHeight: 70.0,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Text(
+          context.loc.new_note,
+          style: GoogleFonts.urbanist(
+              color: const Color(0xff1C2760),
+              fontSize: 24,
+              fontWeight: FontWeight.bold),
+        ),
         actions: [
-          IconButton(
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: IconButton(
               onPressed: () async {
                 final text = _textController.text;
                 if (_note == null || text.isEmpty) {
@@ -97,7 +117,12 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
                   Share.share(text);
                 }
               },
-              icon: const Icon(Icons.share))
+              icon: const Icon(
+                Icons.share,
+              ),
+              color: const Color(0xff9098B1),
+            ),
+          ),
         ],
       ),
       body: FutureBuilder(
@@ -106,12 +131,22 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               _setupTextControllerListener();
-              return TextField(
-                controller: _textController,
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                decoration:
-                    InputDecoration(hintText: context.loc.new_note_placeholder),
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  textCapitalization: TextCapitalization.sentences,
+                  controller: _textController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: context.loc.new_note_placeholder,
+                    focusColor: Colors.red,
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xff09C2B5)),
+                    ),
+                  ),
+                ),
               );
             default:
               return const CircularProgressIndicator();
