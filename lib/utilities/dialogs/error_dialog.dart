@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fornote/extensions/build_contex/loc.dart';
 import 'package:fornote/utilities/dialogs/genric_dialog.dart';
 
 Future<void> showErrorDialog({
@@ -7,8 +8,8 @@ Future<void> showErrorDialog({
 }) {
   return showGenericDialog(
     context: context,
-    title: 'an error occured',
+    title: context.loc.generic_error_prompt,
     content: content,
-    optionBuilder: () => {'ok': null},
+    optionBuilder: () => {context.loc.ok: null},
   );
 }

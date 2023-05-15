@@ -34,7 +34,7 @@ class _NoteViewState extends State<NoteView> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        toolbarHeight: 70.0,
+        toolbarHeight: 75.0,
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: Padding(
@@ -72,9 +72,7 @@ class _NoteViewState extends State<NoteView> {
                         content: context.loc.logout_dialog_prompt);
                     if (shouldLogout) {
                       // ignore: use_build_context_synchronously
-                      context.read<AuthBloc>().add(
-                            const AuthEventLogOut(),
-                          );
+                      context.read<AuthBloc>().add(const AuthEventLogOut());
                     }
                 }
               },
@@ -93,25 +91,26 @@ class _NoteViewState extends State<NoteView> {
           preferredSize: const Size.fromHeight(4.0),
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0, bottom: 8),
-                  child: StreamBuilder(
-                      stream: _notesServices
-                          .getAllNote(ownerUserId: userId)
-                          .getLength,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final noteCount = snapshot.data ?? 0;
-                          final text = context.loc.notes_title(noteCount);
-                          return Text(text);
-                        } else {
-                          return const Text('');
-                        }
-                      }),
-                ),
-              ),
+              StreamBuilder(
+                  stream:
+                      _notesServices.getAllNote(ownerUserId: userId).getLength,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final noteCount = snapshot.data ?? 0;
+                      final text = context.loc.notes_title(noteCount);
+                      return Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8.0, right: 8, bottom: 4),
+                            child: Text(text),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const Text('');
+                    }
+                  }),
               Container(
                 color: const Color.fromARGB(255, 213, 215, 215),
                 height: 4.0,

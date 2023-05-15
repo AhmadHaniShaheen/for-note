@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fornote/extensions/build_contex/loc.dart';
 import 'package:fornote/utilities/dialogs/genric_dialog.dart';
 
 Future<bool> showDeleteDialog({
@@ -7,11 +8,11 @@ Future<bool> showDeleteDialog({
 }) {
   return showGenericDialog(
     context: context,
-    title: 'Delete Item',
+    title: context.loc.delete,
     content: content,
     optionBuilder: () => {
-      'Cancel': false,
-      'Sure': true,
+      context.loc.cancel: false,
+      context.loc.yes: true,
     },
   ).then((value) => value ?? false);
 }

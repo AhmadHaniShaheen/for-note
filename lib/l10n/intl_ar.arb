@@ -7,7 +7,7 @@
       }
     }
   },
-  "cancel": "إنهاء",
+  "cancel": "تراجع",
   "cannot_share_empty_note_prompt": "لا يمكن مشاركة مهمة فارغة!",
   "delete": "حذف ",
   "delete_note_prompt": "هل أنت متأكد أنك تريد حذف هذه المهمة؟",
